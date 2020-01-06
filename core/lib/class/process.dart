@@ -4,8 +4,14 @@ class Process {
   int time;
   int timeLeft;
   int priority;
-  bool crossed;
-  Process(this.id, this.arrived, this.time, this.priority, this.crossed);
+  bool crossed = false;
+  Process(this.id, this.arrived, this.time, this.priority);
 
   int getTimeLeft() => timeLeft;
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return 'P$id timeleft:$time';
+  }
 }
