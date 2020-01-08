@@ -1,6 +1,6 @@
 class Interruption {
-  int inst;
   String tipo;
-
-  Interruption(this.inst, this.tipo);
+  int blocked;
+  int suspended;
+  Interruption(this.tipo, this.blocked, this.suspended);
 }

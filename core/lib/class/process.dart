@@ -4,14 +4,12 @@ class Process {
   int time;
   int priority;
   bool crossed = false;
-
-  Process(this.id, this.arrived, this.time, this.priority);
-
-  
+  int timeLeft;
+  List<List<int>> interruption;
+  Process(this.id, this.arrived, this.time, this.priority, this.timeLeft,this.interruption);
 
   @override
   String toString() {
-    // TODO: implement toString
     return 'P$id timeleft:$time';
   }
 }

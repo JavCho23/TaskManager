@@ -31,8 +31,8 @@ abstract class Structure {
   }
 
   void add(Process process) {
-    
-    data.add(Process(process.id, process.arrived, process.time, process.priority));
+    data.add(Process(process.id, process.arrived, process.time,
+        process.priority, process.timeLeft));
   }
 
   int getLength() => data.length;

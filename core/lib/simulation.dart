@@ -1,5 +1,5 @@
 import 'package:core/class/process.dart';
-
+import 'class/state.dart';
 import 'class/structures.dart';
 
 class TaskManager {
@@ -7,34 +7,51 @@ class TaskManager {
   Structure ready;
   Structure executing;
   Structure terminated;
+  List<State> states;
   int quantum;
 
   TaskManager(
       this.ew, this.ready, this.executing, this.terminated, this.quantum);
 
   void calcular() {
+    states = [];
     ew.ordenar(ew.data, 0, ew.getLength() - 1);
-    print('Nuevo');
 
     for (int i = 0; i < ew.getLength(); i++) {
       ready.add(ew.getNext());
-      print(ew.data.elementAt(i));
+      states.add(State(ew.data.elementAt(i).id,
+          [0, quantum * ew.data.elementAt(i).time], "N"));
+      print(states.elementAt(i));
     }
-    print('Listo');
 
     for (int i = 0; i < ready.getLength(); i++) {
-      print(ready.data.elementAt(i));
+      states.add(State(ready.data.elementAt(i).id,
+          [0, quantum * ready.data.elementAt(i).time], "L"));
+      print(states.last);
     }
-    print('Estados');
 
     while (terminated.getLength() != ew.getLength()) {
       Process aux = ready.getNext();
-      print(aux);
+      if (aux != null) {
+        executing.add(aux);
+        int inst = (aux.time - aux.timeLeft) * quantum;
+        states.add(State(aux.id, [inst, inst + quantum - 1], "E"));
+        print(states.last);
 
-      executing.add(aux);
-      aux.time = aux.time - 1;
+        aux.timeLeft = aux.timeLeft - 1;
 
-      (aux.time <= 0) ? terminated.add(aux) : ready.add(aux);
+        if (aux.timeLeft <= 0) {
+          terminated.add(aux);
+          states.add(State(aux.id, [inst, inst + quantum - 1], "T"));
+          print(states.last);
+        } else {
+          ready.add(aux);
+          states.add(State(aux.id, [inst, inst + quantum - 1], "L"));
+          print(states.last);
+        }
+      } else {
+        print('Tiempo muerto');
+      }
     }
   }
 }
