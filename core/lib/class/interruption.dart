@@ -1,6 +1,13 @@
-class Interruption {
-  String tipo;
+class InterruptionConfig {
+  int tipo;
   int blocked;
   int suspended;
-  Interruption(this.tipo, this.blocked, this.suspended);
+  InterruptionConfig(this.tipo, this.blocked, this.suspended);
+}
+
+class Interruption {
+  int tipo;
+  int inst;
+
+  Interruption(this.tipo, this.inst);
 }

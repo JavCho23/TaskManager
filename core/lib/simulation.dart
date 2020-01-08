@@ -1,3 +1,4 @@
+import 'package:core/class/interruption.dart';
 import 'package:core/class/process.dart';
 import 'class/state.dart';
 import 'class/structures.dart';
@@ -7,14 +8,16 @@ class TaskManager {
   Structure ready;
   Structure executing;
   Structure terminated;
-  List<State> states;
+  Structure bloked;
+  Structure suspended;
+  List<State> states = [];
+  List<InterruptionConfig> interruptions;
   int quantum;
 
-  TaskManager(
-      this.ew, this.ready, this.executing, this.terminated, this.quantum);
+  TaskManager(this.ew, this.ready, this.executing, this.terminated, this.bloked,
+      this.suspended, this.quantum, this.interruptions);
 
   void calcular() {
-    states = [];
     ew.ordenar(ew.data, 0, ew.getLength() - 1);
 
     for (int i = 0; i < ew.getLength(); i++) {
