@@ -31,14 +31,16 @@ abstract class Structure {
   }
 
   void add(Process process) {
-    data.add(Process(
+    data.add(Process.clone(
         process.id,
         process.arrived,
         process.time,
         process.priority,
         process.timeLeft,
         process.interruptions,
-        process.block));
+        process.block,
+        process.lastType,
+        process.sus));
   }
 
   int getLength() => data.length;
@@ -50,7 +52,7 @@ class StructureStack extends Structure {
   @override
   Process getNext() {
     for (var i = data.length - 1; i >= 0; i--) {
-      if (!data.elementAt(i).crossed && data.elementAt(i).block == 0) {
+      if (!data.elementAt(i).crossed) {
         data.elementAt(i).crossed = true;
         return data.elementAt(i);
       }
@@ -65,7 +67,7 @@ class StructureQuewe extends Structure {
   @override
   Process getNext() {
     for (Process process in data) {
-      if (!process.crossed && process.block == 0) {
+      if (!process.crossed) {
         Process next = process;
         process.crossed = true;
         return next;
@@ -86,9 +88,7 @@ class StructurePriority extends Structure {
     bool sw = false;
     for (var i = 0; i < orden.length; i++) {
       for (Process process in data) {
-        if (orden.elementAt(i) == process.priority &&
-            !process.crossed &&
-            process.block == 0) {
+        if (orden.elementAt(i) == process.priority && !process.crossed) {
           priority.add(process);
           if (!sw) sw = true;
         }

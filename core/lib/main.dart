@@ -19,19 +19,34 @@ void main() {
   //   print(linea.getNext());
   // }
   TaskManager tm = TaskManager(
-      StructureStack([
-        Process(1, 5, 4, 2, 4,
-            [Interruption(1, 3), Interruption(2, 7), Interruption(3, 11)], 0),
-        Process(2, 3, 5, 3, 5,
-            [Interruption(1, 11), Interruption(2, 3), Interruption(3, 7)], 0),
-        Process(3, 1, 4, 1, 4,
-            [Interruption(1, 15), Interruption(2, 7), Interruption(3, 3)], 0),
-        Process(4, 2, 4, 3, 4, [Interruption(1, 3), Interruption(2, 11)], 0),
-        Process(5, 9, 3, 2, 3, [Interruption(1, 11), Interruption(3, 3)], 0),
-        Process(6, 0, 5, 1, 5,
-            [Interruption(1, 15), Interruption(2, 3), Interruption(3, 7)], 0)
+      StructureQuewe([
+        Process(
+          1,
+          5,
+          4,
+          2,
+          [Interruption(1, 3), Interruption(2, 7), Interruption(3, 11)],
+        ),
+        Process(
+          2,
+          3,
+          5,
+          3,
+          [Interruption(1, 11), Interruption(2, 3), Interruption(3, 7)],
+        ),
+        Process(
+          3,
+          1,
+          4,
+          1,
+          [Interruption(1, 15), Interruption(2, 7), Interruption(3, 3)],
+        ),
+        Process(4, 2, 4, 3, [Interruption(1, 3), Interruption(2, 11)]),
+        Process(5, 9, 3, 2, [Interruption(1, 11), Interruption(3, 3)]),
+        Process(6, 0, 5, 1,
+            [Interruption(1, 15), Interruption(2, 3), Interruption(3, 7)])
       ]),
-      StructurePriority([], [1, 3, 2]),
+      StructurePriority([], [3, 1, 2]),
       StructureQuewe([]),
       StructureQuewe([]),
       StructureStack([]),

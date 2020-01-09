@@ -8,10 +8,29 @@ class Process {
   bool crossed = false;
   int timeLeft;
   int block;
+  int sus;
+  int lastType;
   List<Interruption> interruptions;
-  Process(this.id, this.arrived, this.time, this.priority, this.timeLeft,
-      this.interruptions, this.block) {
+  Process(this.id, this.arrived, this.time, this.priority, this.interruptions) {
     ordenarInterrupciones(interruptions, 0, interruptions.length - 1);
+    lastType = 0;
+    timeLeft = time;
+    block = 0;
+  }
+  Process.clone(this.id, this.arrived, this.time, this.priority, this.timeLeft,
+      this.interruptions, this.block, this.lastType, this.sus);
+  Interruption getNextInterruption() {
+    if (interruptions.length > 0) return interruptions.first;
+    return null;
+  }
+
+  void deleteInterruption(int type) {
+    for (Interruption interruption in interruptions) {
+      if (interruption.tipo == type) {
+        interruptions.remove(interruption);
+        break;
+      }
+    }
   }
 
   void ordenarInterrupciones(List<Interruption> data, int izq, int der) {
