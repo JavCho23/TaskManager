@@ -39,8 +39,9 @@ class TaskManager {
           [0, quantum * ready.data.elementAt(i).time], "L"));
       print(states.last);
     }
-    int quantumtotal = 2, lost = 0;
-    while (terminated.getLength() != ew.getLength()) {
+    int quantumtotal = 2;
+    int lost = 0;
+    while (terminated.getLength() + lost != ew.getLength()) {
       print("----------------");
       quantumtotal++;
       Process aux = ready.getNext();
@@ -50,25 +51,26 @@ class TaskManager {
         states.add(State(aux.id, [inst, inst + quantum - 1], "E"));
         print(states.last);
         aux.timeLeft = aux.timeLeft - 1;
-        if (aux.timeLeft <= 0) {
-          terminated.add(aux);
-          states.add(State(aux.id, [inst, inst + quantum - 1], "T"));
-          print(states.last);
-        } else {
-          Interruption interruption = aux.getNextInterruption();
-          if (interruption == null || interruption.inst != inst + quantum - 1) {
+
+        Interruption interruption = aux.getNextInterruption();
+        if (interruption == null || interruption.inst != inst + quantum - 1) {
+          if (aux.timeLeft <= 0) {
+            terminated.add(aux);
+            states.add(State(aux.id, [inst, inst + quantum - 1], "T"));
+            print(states.last);
+          } else {
             ready.add(aux);
             states.add(State(aux.id, [inst, inst + quantum - 1], "L"));
             print(states.last);
-          } else {
-            aux.block =
-                quantumtotal + getInterruptionConfig(interruption.tipo).blocked;
-            aux.lastType = interruption.tipo;
-            bloked.add(aux);
-            states.add(State(aux.id, [inst, inst + quantum - 1],
-                'B(' + interruption.tipo.toString() + ')'));
-            print(states.last);
           }
+        } else {
+          aux.block =
+              quantumtotal + getInterruptionConfig(interruption.tipo).blocked;
+          aux.lastType = interruption.tipo;
+          bloked.add(aux);
+          states.add(State(aux.id, [inst, inst + quantum - 1],
+              'B(' + interruption.tipo.toString() + ')'));
+          print(states.last);
         }
       } else {
         print('Tiempo muerto');
