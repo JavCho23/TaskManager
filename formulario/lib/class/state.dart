@@ -1,9 +1,9 @@
-class State {
+class StateQ {
   int id;
   List<int> inst;
   String state;
 
-  State(this.id, this.inst, this.state);
+  StateQ(this.id, this.inst, this.state);
 
   @override
   String toString() {

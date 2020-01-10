@@ -14,7 +14,8 @@ class MyRegisterPage extends StatefulWidget {
   int interruptions;
 
   @override
-  _MyRegisterPageState createState() => _MyRegisterPageState();
+  _MyRegisterPageState createState() =>
+      _MyRegisterPageState(interruptions, processes);
 }
 
 class _MyRegisterPageState extends State<MyRegisterPage> {
@@ -23,76 +24,115 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
   List<Widget> processesW = [];
   List<int> processes = [];
   List<int> breaks = [];
-
-  // _MyRegisterPageState(this.breaksTotal, this.processesTotal) {
-  //   for (var i = 0; i < processesTotal; i++) {
-  //     processesW.add(Card(
-  //         child: Row(
-  //       children: <Widget>[
-  //         Container(
-  //           width: 300,
-  //           child: Text(
-  //             'P',
-  //             style: TextStyle(
-  //               fontSize: 22,
-  //             ),
-  //           ),
-  //         ),
-  //         TextFormField(
-  //           decoration: InputDecoration(labelText: 'Cantidad de procesos'),
-  //           keyboardType: TextInputType.number,
-  //           validator: (input) =>
-  //               input.length == 0 ? 'Ingrese un número correcto' : null,
-  //           onSaved: (input) => processes[i] = int.parse(input),
-  //         ),
-  //         TextFormField(
-  //           decoration:
-  //               InputDecoration(labelText: 'Cantidad de interrupciones'),
-  //           keyboardType: TextInputType.number,
-  //           validator: (input) =>
-  //               input.length == 0 ? 'Ingrese un número correcto' : null,
-  //           onSaved: (input) => breaks[i] = int.parse(input),
-  //         )
-  //       ],
-  //     )));
-  //   }
-  //}
+  double maxFormFieldWidth = 70;
+  _MyRegisterPageState(this.breaksTotal, this.processesTotal) {
+    for (var i = 1; i <= processesTotal; i++) {
+      processesW.add(
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+        Card(
+            child: Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: Text(
+                  'P$i',
+                  style: TextStyle(
+                    fontSize: 22,
+                  ),
+                ),
+              ),
+              Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: maxFormFieldWidth),
+                      child: TextFormField(
+                        decoration: InputDecoration(labelText: 'Llegada'),
+                        keyboardType: TextInputType.number,
+                        validator: (input) => input.length == 0
+                            ? 'Ingrese un número correcto'
+                            : null,
+                        onSaved: (input) => processes[i] = int.parse(input),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: maxFormFieldWidth),
+                      child: TextFormField(
+                        decoration: InputDecoration(labelText: 'Tiempo'),
+                        keyboardType: TextInputType.number,
+                        validator: (input) => input.length == 0
+                            ? 'Ingrese un número correcto'
+                            : null,
+                        onSaved: (input) => processes[i] = int.parse(input),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: maxFormFieldWidth),
+                      child: TextFormField(
+                        decoration: InputDecoration(labelText: 'Prioridad'),
+                        keyboardType: TextInputType.number,
+                        validator: (input) => input.length == 0
+                            ? 'Ingrese un número correcto'
+                            : null,
+                        onSaved: (input) => processes[i] = int.parse(input),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ))
+      ]));
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Row(
+      body: ListView(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Container(
+                  child: Text('Datos de los procesos'),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: processesW,
+          ),
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Column(
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Container(
-                    child: Text('Datos de los procesos'),
+                MaterialButton(
+                  color: Theme.of(context).primaryColor,
+                  onPressed: _submit,
+                  child: Text(
+                    'Calcular',
+                    style: TextStyle(color: Colors.white),
                   ),
                 )
               ],
             ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Column(
-                children: <Widget>[
-                  MaterialButton(
-                    color: Theme.of(context).primaryColor,
-                    onPressed: _submit,
-                    child: Text(
-                      'Calcular',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );

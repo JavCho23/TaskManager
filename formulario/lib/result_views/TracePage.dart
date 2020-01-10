@@ -11,7 +11,7 @@ class TraceState extends State<TracePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text('Estados'),
+      child: Text('Trazas'),
     );
   }
 }

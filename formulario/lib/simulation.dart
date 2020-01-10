@@ -32,40 +32,34 @@ class TaskManager {
 
     for (int i = 0; i < ew.getLength(); i++) {
       ready.add(ew.getNext());
-      states.add(State(ew.data.elementAt(i).id,
+      states.add(StateQ(ew.data.elementAt(i).id,
           [0, (quantum * ew.data.elementAt(i).time) - 1], "N"));
       print(states.elementAt(i));
     }
-    print("----------------");
 
     for (int i = 0; i < ready.getLength(); i++) {
-      states.add(State(ready.data.elementAt(i).id,
+      states.add(StateQ(ready.data.elementAt(i).id,
           [0, (quantum * ready.data.elementAt(i).time) - 1], "L"));
-      print(states.last);
     }
     int quantumtotal = 2;
     int lost = 0;
     while (terminated.getLength() + lost != ew.getLength()) {
-      print("----------------");
       quantumtotal++;
       Process aux = ready.getNext();
       if (aux != null) {
         executing.add(aux);
         int inst = (aux.time - aux.timeLeft) * quantum;
-        states.add(State(aux.id, [inst, inst + quantum - 1], "E"));
-        print(states.last);
+        states.add(StateQ(aux.id, [inst, inst + quantum - 1], "E"));
         aux.timeLeft = aux.timeLeft - 1;
 
         Interruption interruption = aux.getNextInterruption();
         if (interruption == null || interruption.inst != inst + quantum - 1) {
           if (aux.timeLeft <= 0) {
             terminated.add(aux);
-            states.add(State(aux.id, [inst, inst + quantum - 1], "T"));
-            print(states.last);
+            states.add(StateQ(aux.id, [inst, inst + quantum - 1], "T"));
           } else {
             ready.add(aux);
-            states.add(State(aux.id, [inst, inst + quantum - 1], "L"));
-            print(states.last);
+            states.add(StateQ(aux.id, [inst, inst + quantum - 1], "L"));
           }
         } else {
           aux.block =
@@ -73,13 +67,11 @@ class TaskManager {
           aux.lastType = interruption.tipo;
           aux.inst = inst;
           bloked.add(aux);
-          states.add(State(aux.id, [inst, inst + quantum - 1],
+          states.add(StateQ(aux.id, [inst, inst + quantum - 1],
               'B(' + interruption.tipo.toString() + ')'));
-          print(states.last);
         }
       } else {
         states.add('Tiempo muerto');
-        print(states.last);
       }
       List<Process> blockFree = [], suspendedFree = [];
 
@@ -93,21 +85,18 @@ class TaskManager {
           block.sus =
               getInterruptionConfig(block.lastType).suspended + quantumtotal;
           suspended.add(block);
-          states.add(State(block.id, [block.inst, block.inst + quantum - 1],
+          states.add(StateQ(block.id, [block.inst, block.inst + quantum - 1],
               'S(' + block.lastType.toString() + ')'));
-          print(states.last);
         } else {
           block.deleteInterruption(block.lastType);
           if (block.timeLeft <= 0) {
             lost++;
             states.add(
-                State(block.id, [block.inst, block.inst + quantum - 1], "P"));
-            print(states.last);
+                StateQ(block.id, [block.inst, block.inst + quantum - 1], "P"));
           } else {
             ready.add(block);
             states.add(
-                State(block.id, [block.inst, block.inst + quantum - 1], "L"));
-            print(states.last);
+                StateQ(block.id, [block.inst, block.inst + quantum - 1], "L"));
           }
         }
       }
@@ -119,12 +108,10 @@ class TaskManager {
         sus.deleteInterruption(sus.lastType);
         if (sus.timeLeft <= 0) {
           lost++;
-          states.add(State(sus.id, [sus.inst, sus.inst + quantum - 1], "P"));
-          print(states.last);
+          states.add(StateQ(sus.id, [sus.inst, sus.inst + quantum - 1], "P"));
         } else {
           ready.add(sus);
-          states.add(State(sus.id, [sus.inst, sus.inst + quantum - 1], "L"));
-          print(states.last);
+          states.add(StateQ(sus.id, [sus.inst, sus.inst + quantum - 1], "L"));
         }
       }
     }
