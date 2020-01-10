@@ -5,8 +5,6 @@ import 'class/structures.dart';
 import 'class/process.dart';
 
 void main() {
-  print("Hola, mundo");
- 
   TaskManager tm = TaskManager(
       StructureStack([
         Process(1, 4, 4, 1, [Interruption(1, 3), Interruption(2, 7)]),
@@ -16,8 +14,6 @@ void main() {
         Process(5, 1, 5, 3, [Interruption(1, 3), Interruption(2, 15)])
       ]),
       StructurePriority([], [2, 1, 3]),
-      StructureQuewe([]),
-      StructureQuewe([]),
       StructureStack([]),
       StructureStack([]),
       4,

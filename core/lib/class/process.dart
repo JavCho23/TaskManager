@@ -10,6 +10,7 @@ class Process {
   int block;
   int sus;
   int lastType;
+  int inst;
   List<Interruption> interruptions;
   Process(this.id, this.arrived, this.time, this.priority, this.interruptions) {
     ordenarInterrupciones(interruptions, 0, interruptions.length - 1);
@@ -18,7 +19,7 @@ class Process {
     block = 0;
   }
   Process.clone(this.id, this.arrived, this.time, this.priority, this.timeLeft,
-      this.interruptions, this.block, this.lastType, this.sus);
+      this.interruptions, this.block, this.lastType, this.sus, this.inst);
   Interruption getNextInterruption() {
     if (interruptions.length > 0) return interruptions.first;
     return null;

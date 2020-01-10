@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Quantum'),
+      home: MyHomePage(title: 'TaskManager'),
     );
   }
 }
@@ -79,11 +79,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         keyboardType: TextInputType.number,
                       ),
                       TextFormField(
-                        decoration:
-                            InputDecoration(labelText: 'Cantidad de interrupciones'),
+                        decoration: InputDecoration(
+                            labelText: 'Cantidad de interrupciones'),
                         keyboardType: TextInputType.number,
                       )
-                      
                     ],
                   ),
                 ),

@@ -10,12 +10,15 @@ class TaskManager {
   Structure terminated;
   Structure bloked;
   Structure suspended;
-  List<State> states = [];
+  List states = [];
   List<InterruptionConfig> interruptions;
   int quantum;
 
-  TaskManager(this.ew, this.ready, this.executing, this.terminated, this.bloked,
-      this.suspended, this.quantum, this.interruptions);
+  TaskManager(this.ew, this.ready, this.bloked, this.suspended, this.quantum,
+      this.interruptions) {
+    executing = StructureQuewe([]);
+    terminated = StructureQuewe([]);
+  }
 
   InterruptionConfig getInterruptionConfig(int type) {
     for (InterruptionConfig item in interruptions) {
@@ -30,13 +33,14 @@ class TaskManager {
     for (int i = 0; i < ew.getLength(); i++) {
       ready.add(ew.getNext());
       states.add(State(ew.data.elementAt(i).id,
-          [0, quantum * ew.data.elementAt(i).time], "N"));
+          [0, (quantum * ew.data.elementAt(i).time) - 1], "N"));
       print(states.elementAt(i));
     }
+    print("----------------");
 
     for (int i = 0; i < ready.getLength(); i++) {
       states.add(State(ready.data.elementAt(i).id,
-          [0, quantum * ready.data.elementAt(i).time], "L"));
+          [0, (quantum * ready.data.elementAt(i).time) - 1], "L"));
       print(states.last);
     }
     int quantumtotal = 2;
@@ -67,13 +71,15 @@ class TaskManager {
           aux.block =
               quantumtotal + getInterruptionConfig(interruption.tipo).blocked;
           aux.lastType = interruption.tipo;
+          aux.inst = inst;
           bloked.add(aux);
           states.add(State(aux.id, [inst, inst + quantum - 1],
               'B(' + interruption.tipo.toString() + ')'));
           print(states.last);
         }
       } else {
-        print('Tiempo muerto');
+        states.add('Tiempo muerto');
+        print(states.last);
       }
       List<Process> blockFree = [], suspendedFree = [];
 
@@ -87,18 +93,20 @@ class TaskManager {
           block.sus =
               getInterruptionConfig(block.lastType).suspended + quantumtotal;
           suspended.add(block);
-          states.add(
-              State(block.id, [0, 0], 'S(' + block.lastType.toString() + ')'));
+          states.add(State(block.id, [block.inst, block.inst + quantum - 1],
+              'S(' + block.lastType.toString() + ')'));
           print(states.last);
         } else {
           block.deleteInterruption(block.lastType);
           if (block.timeLeft <= 0) {
             lost++;
-            states.add(State(block.id, [0, 0], "P"));
+            states.add(
+                State(block.id, [block.inst, block.inst + quantum - 1], "P"));
             print(states.last);
           } else {
             ready.add(block);
-            states.add(State(block.id, [0, 0], "L"));
+            states.add(
+                State(block.id, [block.inst, block.inst + quantum - 1], "L"));
             print(states.last);
           }
         }
@@ -111,11 +119,11 @@ class TaskManager {
         sus.deleteInterruption(sus.lastType);
         if (sus.timeLeft <= 0) {
           lost++;
-          states.add(State(sus.id, [0, 0], "P"));
+          states.add(State(sus.id, [sus.inst, sus.inst + quantum - 1], "P"));
           print(states.last);
         } else {
           ready.add(sus);
-          states.add(State(sus.id, [0, 0], "L"));
+          states.add(State(sus.id, [sus.inst, sus.inst + quantum - 1], "L"));
           print(states.last);
         }
       }

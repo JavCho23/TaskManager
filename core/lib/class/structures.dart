@@ -40,7 +40,8 @@ abstract class Structure {
         process.interruptions,
         process.block,
         process.lastType,
-        process.sus));
+        process.sus,
+        process.inst));
   }
 
   int getLength() => data.length;
