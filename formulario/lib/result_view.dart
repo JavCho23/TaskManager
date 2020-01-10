@@ -18,14 +18,13 @@ class ResultVieW extends StatefulWidget {
 
 class ResultVieWState extends State<ResultVieW> {
   int _selectedPage = 0;
-  static TaskManager tm;
   StatePage statePage;
   var _pages;
   ResultVieWState(tm) {
-    ResultVieWState.tm = tm;
-    ResultVieWState.tm.calcular();
+    tm.calcular();
     _pages = [
-      DataStructurePage(),
+      DataStructurePage(
+          tm.ew, tm.ready, tm.bloked, tm.suspended, tm.terminated),
       TracePage(),
       StatePage(tm.states),
       GraphicPage()
