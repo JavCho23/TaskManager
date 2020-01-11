@@ -46,7 +46,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final formKey = GlobalKey<FormState>();
-  int breaks, processes;
+  int breaks, processes, priorities;
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +112,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                 : null,
                             onSaved: (input) => breaks = int.parse(input),
                           ),
+                          TextFormField(
+                            decoration: InputDecoration(
+                                labelText: 'Cantidad de prioridades'),
+                            keyboardType: TextInputType.number,
+                            validator: (input) => input.length == 0
+                                ? 'Ingrese un número correcto'
+                                : null,
+                            onSaved: (input) => priorities = int.parse(input),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -151,6 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
           title: 'TaskManager',
           interruptions: breaks,
           processes: processes,
+          
         );
       }));
     }

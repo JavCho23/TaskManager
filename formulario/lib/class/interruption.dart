@@ -3,6 +3,7 @@ class InterruptionConfig {
   int blocked;
   int suspended;
   InterruptionConfig(this.tipo, this.blocked, this.suspended);
+  InterruptionConfig.empy(this.tipo);
 }
 
 class Interruption {
@@ -10,4 +11,5 @@ class Interruption {
   int inst;
 
   Interruption(this.tipo, this.inst);
+  Interruption.empy(this.tipo);
 }

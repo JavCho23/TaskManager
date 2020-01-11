@@ -12,6 +12,7 @@ class Process {
   int lastType;
   int inst;
   List<Interruption> interruptions;
+  Process.empy(this.id);
   Process(this.id, this.arrived, this.time, this.priority, this.interruptions) {
     ordenarInterrupciones(interruptions, 0, interruptions.length - 1);
     lastType = 0;
