@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:formulario/class/state.dart';
+import 'package:formulario/class/structures.dart';
 import 'package:formulario/simulation.dart';
 import 'result_views/DataEstructurePage.dart';
 import 'result_views/GraphicPage.dart';
@@ -20,14 +20,14 @@ class ResultVieWState extends State<ResultVieW> {
   int _selectedPage = 0;
   StatePage statePage;
   var _pages;
-  ResultVieWState(tm) {
+  ResultVieWState(TaskManager tm) {
     tm.calcular();
     _pages = [
-      DataStructurePage(
-          tm.ew, tm.ready, tm.bloked, tm.suspended, tm.terminated),
+      DataStructurePage(tm.ew.data, tm.ready.data, tm.executing.data,
+          tm.bloked.data, tm.suspended.data, tm.terminated.data),
       TracePage(),
       StatePage(tm.states),
-      GraphicPage()
+      GraphicPage(tm.executing.data)
     ];
   }
 
@@ -60,7 +60,7 @@ class ResultVieWState extends State<ResultVieW> {
               backgroundColor: Theme.of(context).primaryColor),
           BottomNavigationBarItem(
               icon: Icon(Icons.assessment),
-              title: Text('Histograma'),
+              title: Text('Grafico'),
               backgroundColor: Theme.of(context).primaryColor)
         ],
       ),
