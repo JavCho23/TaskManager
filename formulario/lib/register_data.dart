@@ -699,20 +699,24 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
       print(structure[0]);
       print(structure[1]);
       if (structure[0] is StructurePriority) {
-        (structure[0] as StructurePriority).orden =
-            priorityFLow[0] ? priorityOrder[0] : priorityOrder[0].reversed;
+        (structure[0] as StructurePriority).orden = priorityFLow[0]
+            ? priorityOrder[0]
+            : priorityOrder[0].reversed.toList();
       }
       if (structure[1] is StructurePriority) {
-        (structure[1] as StructurePriority).orden =
-            priorityFLow[1] ? priorityOrder[1] : priorityOrder[1].reversed;
+        (structure[1] as StructurePriority).orden = priorityFLow[1]
+            ? priorityOrder[1]
+            : priorityOrder[1].reversed.toList();
       }
       if (structure[2] is StructurePriority) {
-        (structure[2] as StructurePriority).orden =
-            priorityFLow[2] ? priorityOrder[2] : priorityOrder[2].reversed;
+        (structure[2] as StructurePriority).orden = priorityFLow[2]
+            ? priorityOrder[2]
+            : priorityOrder[2].reversed.toList();
       }
       if (structure[3] is StructurePriority) {
-        (structure[3] as StructurePriority).orden =
-            priorityFLow[3] ? priorityOrder[3] : priorityOrder[3].reversed;
+        (structure[3] as StructurePriority).orden = priorityFLow[3]
+            ? priorityOrder[3]
+            : priorityOrder[3].reversed.toList();
       }
       TaskManager tm = TaskManager(structure[0], structure[1], structure[2],
           structure[3], _quantum, breaks);
