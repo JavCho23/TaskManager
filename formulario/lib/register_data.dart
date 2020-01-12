@@ -34,6 +34,7 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
   ];
 
   List<List<int>> priorityOrder = [[], [], [], []];
+  List<bool> priorityFLow = [true, true, true, true];
   List<bool> _visible = [false, false, false, false];
   List<String> typeStructure = ['Linea de espera', 'Pila', 'Prioridad'];
   List<String> typeStructureSelected = [
@@ -51,6 +52,7 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
   double maxFormFieldWidth = 60;
 
   _MyRegisterPageState(this.breaksTotal, this.processesTotal, this.priorities) {
+    bool sw = true;
     for (int i = 0; i < 4; i++) {
       for (var j = 0; j < priorities; j++) {
         priorityOrderW[i].add(Container(
@@ -110,7 +112,7 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                 ),
               ),
               Container(
-                height: 60,
+                height: 100,
                 width: 330,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
@@ -369,7 +371,27 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                                       opacity: _visible[0] ? 1.0 : 0.0,
                                       child: Row(
                                         children: <Widget>[
-                                          ...priorityOrderW[0]
+                                          ...priorityOrderW[0],
+                                          Radio(
+                                            groupValue: priorityFLow[0],
+                                            value: true,
+                                            onChanged: (bool value) {
+                                              setState(() {
+                                                priorityFLow[0] = value;
+                                              });
+                                            },
+                                          ),
+                                          Text('Mayor'),
+                                          Radio(
+                                            groupValue: priorityFLow[0],
+                                            value: false,
+                                            onChanged: (bool value) {
+                                              setState(() {
+                                                priorityFLow[0] = value;
+                                              });
+                                            },
+                                          ),
+                                          Text('Menor'),
                                         ],
                                       ),
                                     ),
@@ -430,7 +452,27 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                                       opacity: _visible[1] ? 1.0 : 0.0,
                                       child: Row(
                                         children: <Widget>[
-                                          ...priorityOrderW[1]
+                                          ...priorityOrderW[1],
+                                          Radio(
+                                            groupValue: priorityFLow[1],
+                                            value: true,
+                                            onChanged: (bool value) {
+                                              setState(() {
+                                                priorityFLow[1] = value;
+                                              });
+                                            },
+                                          ),
+                                          Text('Mayor'),
+                                          Radio(
+                                            groupValue: priorityFLow[1],
+                                            value: false,
+                                            onChanged: (bool value) {
+                                              setState(() {
+                                                priorityFLow[1] = value;
+                                              });
+                                            },
+                                          ),
+                                          Text('Menor'),
                                         ],
                                       ),
                                     ),
@@ -491,7 +533,27 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                                       opacity: _visible[2] ? 1.0 : 0.0,
                                       child: Row(
                                         children: <Widget>[
-                                          ...priorityOrderW[2]
+                                          ...priorityOrderW[2],
+                                          Radio(
+                                            groupValue: priorityFLow[2],
+                                            value: true,
+                                            onChanged: (bool value) {
+                                              setState(() {
+                                                priorityFLow[2] = value;
+                                              });
+                                            },
+                                          ),
+                                          Text('Mayor'),
+                                          Radio(
+                                            groupValue: priorityFLow[2],
+                                            value: false,
+                                            onChanged: (bool value) {
+                                              setState(() {
+                                                priorityFLow[2] = value;
+                                              });
+                                            },
+                                          ),
+                                          Text('Menor'),
                                         ],
                                       ),
                                     ),
@@ -552,7 +614,27 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                                       opacity: _visible[3] ? 1.0 : 0.0,
                                       child: Row(
                                         children: <Widget>[
-                                          ...priorityOrderW[3]
+                                          ...priorityOrderW[3],
+                                          Radio(
+                                            groupValue: priorityFLow[3],
+                                            value: true,
+                                            onChanged: (bool value) {
+                                              setState(() {
+                                                priorityFLow[3] = value;
+                                              });
+                                            },
+                                          ),
+                                          Text('Mayor'),
+                                          Radio(
+                                            groupValue: priorityFLow[3],
+                                            value: false,
+                                            onChanged: (bool value) {
+                                              setState(() {
+                                                priorityFLow[3] = value;
+                                              });
+                                            },
+                                          ),
+                                          Text('Menor'),
                                         ],
                                       ),
                                     ),
@@ -617,38 +699,26 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
       print(structure[0]);
       print(structure[1]);
       if (structure[0] is StructurePriority) {
-        (structure[0] as StructurePriority).orden = priorityOrder[0];
+        (structure[0] as StructurePriority).orden =
+            priorityFLow[0] ? priorityOrder[0] : priorityOrder[0].reversed;
       }
       if (structure[1] is StructurePriority) {
-        (structure[1] as StructurePriority).orden = priorityOrder[1];
+        (structure[1] as StructurePriority).orden =
+            priorityFLow[1] ? priorityOrder[1] : priorityOrder[1].reversed;
       }
       if (structure[2] is StructurePriority) {
-        (structure[2] as StructurePriority).orden = priorityOrder[2];
+        (structure[2] as StructurePriority).orden =
+            priorityFLow[2] ? priorityOrder[2] : priorityOrder[2].reversed;
       }
       if (structure[3] is StructurePriority) {
-        (structure[3] as StructurePriority).orden = priorityOrder[3];
+        (structure[3] as StructurePriority).orden =
+            priorityFLow[3] ? priorityOrder[3] : priorityOrder[3].reversed;
       }
-      TaskManager tm = TaskManager(structure[1], structure[1], structure[1],
-          structure[1], _quantum, breaks);
+      TaskManager tm = TaskManager(structure[0], structure[1], structure[2],
+          structure[3], _quantum, breaks);
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
         return ResultVieW(tm);
       }));
     }
   }
 }
-// TaskManager(
-//           StructureStack([
-//             Process(1, 4, 4, 1, [Interruption(1, 3), Interruption(2, 7)]),
-//             Process(2, 6, 3, 3, [Interruption(1, 11), Interruption(2, 3)]),
-//             Process(3, 3, 4, 1, [Interruption(1, 3), Interruption(2, 11)]),
-//             Process(4, 2, 3, 2, [Interruption(1, 7), Interruption(2, 11)]),
-//             Process(5, 1, 5, 3, [Interruption(1, 3), Interruption(2, 15)])
-//           ]),
-//           StructurePriority([], [2, 1, 3]),
-//           StructureStack([]),
-//           StructureStack([]),
-//           4,
-//           [
-//             InterruptionConfig(1, 1, 0),
-//             InterruptionConfig(2, 1, 1),
-//           ])

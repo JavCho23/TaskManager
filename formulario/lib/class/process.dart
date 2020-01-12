@@ -14,7 +14,9 @@ class Process {
   List<Interruption> interruptions;
   Process.empy(this.id);
   Process(this.id, this.arrived, this.time, this.priority, this.interruptions) {
-    ordenarInterrupciones(interruptions, 0, interruptions.length - 1);
+    if (interruptions.length > 0)
+      ordenarInterrupciones(interruptions, 0, interruptions.length - 1);
+
     lastType = 0;
     timeLeft = time;
     block = 0;
