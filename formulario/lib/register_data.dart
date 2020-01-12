@@ -25,13 +25,51 @@ class MyRegisterPage extends StatefulWidget {
 
 class _MyRegisterPageState extends State<MyRegisterPage> {
   final formKey = GlobalKey<FormState>();
-  int breaksTotal, processesTotal, priorities;
-  List<Widget> processesW = [];
-  List<Widget> breaksW = [];
+  int breaksTotal, processesTotal, priorities, _quantum;
+  List<Structure> structure = [
+    StructureQuewe([]),
+    StructureQuewe([]),
+    StructureQuewe([]),
+    StructureQuewe([])
+  ];
+
+  List<List<int>> priorityOrder = [[], [], [], []];
+  List<bool> _visible = [false, false, false, false];
+  List<String> typeStructure = ['Linea de espera', 'Pila', 'Prioridad'];
+  List<String> typeStructureSelected = [
+    'Linea de espera',
+    'Linea de espera',
+    'Linea de espera',
+    'Linea de espera'
+  ];
+
+  List<Widget> processesW = [], breaksW = [];
+  List<List<Widget>> priorityOrderW = [[], [], [], []];
   List<Process> processes = [];
   List<InterruptionConfig> breaks = [];
+
   double maxFormFieldWidth = 60;
+
   _MyRegisterPageState(this.breaksTotal, this.processesTotal, this.priorities) {
+    for (int i = 0; i < 4; i++) {
+      for (var j = 0; j < priorities; j++) {
+        priorityOrderW[i].add(Container(
+          constraints: BoxConstraints(maxWidth: 60),
+          child: TextFormField(
+            initialValue: "0",
+            decoration: InputDecoration(labelText: 'Prioridad'),
+            keyboardType: TextInputType.number,
+            onSaved: (input) => priorityOrder[i].add(int.parse(input)),
+          ),
+        ));
+        priorityOrderW[i].add(Container(
+          constraints: BoxConstraints(maxWidth: 100),
+          child: Text('>'),
+        ));
+      }
+      priorityOrderW[i].removeLast();
+    }
+
     for (var i = 1; i <= processesTotal; i++) {
       processes.add(Process.empy(i));
       Process p = processes.last;
@@ -39,7 +77,6 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
       List<Interruption> breaks = [];
       for (var i = 1; i <= breaksTotal; i++) {
         Interruption inte = Interruption.empy(i);
-        breaks.add(inte);
         interruptionW.add(Padding(
           padding: EdgeInsets.all(8.0),
           child: Container(
@@ -53,7 +90,9 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
             ),
           ),
         ));
+        breaks.add(inte);
       }
+
       p.interruptions = breaks;
       processesW.add(
           Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
@@ -72,7 +111,7 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
               ),
               Container(
                 height: 60,
-                width: 300,
+                width: 330,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: <Widget>[
@@ -202,159 +241,414 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: ListView(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Container(
-                  child: Text('Datos de los procesos'),
-                ),
-              ),
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: processesW,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Container(
-                  child: Text('Datos de las interruptionces'),
-                ),
-              ),
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: breaksW,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Container(
-                  child: Text('Orden de las estructuras'),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Card(
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Container(
-                        child: Text('Nuevo'),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Card(
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Container(
-                        child: Text('Listo'),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Card(
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Container(
-                        child: Text('Bloqueado'),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Card(
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Container(
-                        child: Text('Suspendido'),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Column(
+      body: Form(
+        key: formKey,
+        child: ListView(
+          children: <Widget>[
+            Column(
               children: <Widget>[
-                MaterialButton(
-                  color: Theme.of(context).primaryColor,
-                  onPressed: _submit,
-                  child: Text(
-                    'Calcular',
-                    style: TextStyle(color: Colors.white),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Container(
+                        child: Text('Datos de los procesos'),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: processesW,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Container(
+                        child: Text('Datos de las interruptionces'),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: breaksW,
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Container(
+                          width: 330,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Text('Duracion del Quantum'),
+                              Container(
+                                constraints: BoxConstraints(maxWidth: 100),
+                                child: TextFormField(
+                                  decoration: InputDecoration(hintText: '4'),
+                                  keyboardType: TextInputType.number,
+                                  validator: (input) => input.length == 0
+                                      ? 'Ingrese un número correcto'
+                                      : null,
+                                  onSaved: (input) =>
+                                      _quantum = int.parse(input),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Container(
+                        child: Text('Orden de las estructuras'),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Card(
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Container(
+                              child: Text(
+                                'Nuevo',
+                                style: TextStyle(fontSize: 22),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 350,
+                            height: 60,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: <Widget>[
+                                Container(
+                                  //width: 350,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: DropdownButton(
+                                      value: typeStructureSelected[0],
+                                      onChanged: (String value) {
+                                        _asingEstructure(value, 0);
+                                      },
+                                      items: typeStructure
+                                          .map((item) => DropdownMenuItem(
+                                                child: Text(item),
+                                                value: item,
+                                              ))
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: AnimatedOpacity(
+                                      duration: Duration(milliseconds: 400),
+                                      opacity: _visible[0] ? 1.0 : 0.0,
+                                      child: Row(
+                                        children: <Widget>[
+                                          ...priorityOrderW[0]
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Card(
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Container(
+                              child: Text(
+                                'Listo',
+                                style: TextStyle(fontSize: 22),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 350,
+                            height: 60,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: <Widget>[
+                                Container(
+                                  //width: 350,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: DropdownButton(
+                                      value: typeStructureSelected[1],
+                                      onChanged: (String value) {
+                                        _asingEstructure(value, 1);
+                                      },
+                                      items: typeStructure
+                                          .map((item) => DropdownMenuItem(
+                                                child: Text(item),
+                                                value: item,
+                                              ))
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: AnimatedOpacity(
+                                      duration: Duration(milliseconds: 400),
+                                      opacity: _visible[1] ? 1.0 : 0.0,
+                                      child: Row(
+                                        children: <Widget>[
+                                          ...priorityOrderW[1]
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Card(
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Container(
+                              child: Text(
+                                'Bloqueado',
+                                style: TextStyle(fontSize: 22),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 350,
+                            height: 60,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: <Widget>[
+                                Container(
+                                  //width: 350,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: DropdownButton(
+                                      value: typeStructureSelected[2],
+                                      onChanged: (String value) {
+                                        _asingEstructure(value, 2);
+                                      },
+                                      items: typeStructure
+                                          .map((item) => DropdownMenuItem(
+                                                child: Text(item),
+                                                value: item,
+                                              ))
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: AnimatedOpacity(
+                                      duration: Duration(milliseconds: 400),
+                                      opacity: _visible[2] ? 1.0 : 0.0,
+                                      child: Row(
+                                        children: <Widget>[
+                                          ...priorityOrderW[2]
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Card(
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Container(
+                              child: Text(
+                                'Suspendido',
+                                style: TextStyle(fontSize: 22),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 350,
+                            height: 60,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: <Widget>[
+                                Container(
+                                  //width: 350,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: DropdownButton(
+                                      value: typeStructureSelected[3],
+                                      onChanged: (String value) {
+                                        _asingEstructure(value, 3);
+                                      },
+                                      items: typeStructure
+                                          .map((item) => DropdownMenuItem(
+                                                child: Text(item),
+                                                value: item,
+                                              ))
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: AnimatedOpacity(
+                                      duration: Duration(milliseconds: 400),
+                                      opacity: _visible[3] ? 1.0 : 0.0,
+                                      child: Row(
+                                        children: <Widget>[
+                                          ...priorityOrderW[3]
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    children: <Widget>[
+                      MaterialButton(
+                        color: Theme.of(context).primaryColor,
+                        onPressed: _submit,
+                        child: Text(
+                          'Calcular',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ],
                   ),
                 )
               ],
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
-      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
+  void _asingEstructure(String type, int i) {
+    bool sw = true;
+
+    setState(() {
+      if (type == 'Linea de espera') {
+        sw = false;
+        structure[i] = StructureQuewe([]);
+      } else if (type == 'Pila') {
+        sw = false;
+        structure[i] = StructureStack([]);
+      } else
+        structure[i] = StructurePriority([], []);
+      _visible[i] = sw;
+      typeStructureSelected[i] = type;
+    });
+  }
+
   void _submit() {
-    // if (formKey.currentState.validate()) {
-    // formKey.currentState.save();
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return ResultVieW(TaskManager(
-          StructureStack([
-            Process(1, 4, 4, 1, [Interruption(1, 3), Interruption(2, 7)]),
-            Process(2, 6, 3, 3, [Interruption(1, 11), Interruption(2, 3)]),
-            Process(3, 3, 4, 1, [Interruption(1, 3), Interruption(2, 11)]),
-            Process(4, 2, 3, 2, [Interruption(1, 7), Interruption(2, 11)]),
-            Process(5, 1, 5, 3, [Interruption(1, 3), Interruption(2, 15)])
-          ]),
-          StructurePriority([], [2, 1, 3]),
-          StructureStack([]),
-          StructureStack([]),
-          4,
-          [
-            InterruptionConfig(1, 1, 0),
-            InterruptionConfig(2, 1, 1),
-          ]));
-    }));
-    // }
+    if (formKey.currentState.validate()) {
+      formKey.currentState.save();
+      structure[0].data = processes
+          .map((item) => Process(item.id, item.arrived, item.time,
+              item.priority, item.interruptions))
+          .toList();
+
+      print(structure[0]);
+      print(structure[1]);
+      if (structure[0] is StructurePriority) {
+        (structure[0] as StructurePriority).orden = priorityOrder[0];
+      }
+      if (structure[1] is StructurePriority) {
+        (structure[1] as StructurePriority).orden = priorityOrder[1];
+      }
+      if (structure[2] is StructurePriority) {
+        (structure[2] as StructurePriority).orden = priorityOrder[2];
+      }
+      if (structure[3] is StructurePriority) {
+        (structure[3] as StructurePriority).orden = priorityOrder[3];
+      }
+      TaskManager tm = TaskManager(structure[1], structure[1], structure[1],
+          structure[1], _quantum, breaks);
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        return ResultVieW(tm);
+      }));
+    }
   }
 }
+// TaskManager(
+//           StructureStack([
+//             Process(1, 4, 4, 1, [Interruption(1, 3), Interruption(2, 7)]),
+//             Process(2, 6, 3, 3, [Interruption(1, 11), Interruption(2, 3)]),
+//             Process(3, 3, 4, 1, [Interruption(1, 3), Interruption(2, 11)]),
+//             Process(4, 2, 3, 2, [Interruption(1, 7), Interruption(2, 11)]),
+//             Process(5, 1, 5, 3, [Interruption(1, 3), Interruption(2, 15)])
+//           ]),
+//           StructurePriority([], [2, 1, 3]),
+//           StructureStack([]),
+//           StructureStack([]),
+//           4,
+//           [
+//             InterruptionConfig(1, 1, 0),
+//             InterruptionConfig(2, 1, 1),
+//           ])

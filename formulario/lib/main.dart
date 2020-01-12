@@ -160,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
           title: 'TaskManager',
           interruptions: breaks,
           processes: processes,
-          
+          priorities: priorities,
         );
       }));
     }

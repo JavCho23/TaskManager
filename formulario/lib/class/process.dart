@@ -64,6 +64,6 @@ class Process {
 
   @override
   String toString() {
-    return 'P$id timeleft:$time';
+    return 'P$id timeleft:$time priotiry $priority  ';
   }
 }
