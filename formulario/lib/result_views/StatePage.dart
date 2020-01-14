@@ -68,57 +68,71 @@ class StatePageState extends State<StatePage> {
         if (element is StateQ) {
           return Padding(
             padding: EdgeInsets.all(20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
               children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                if (element.state == 'E')
+                  Divider(
+                    thickness: 3.0,
+                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Container(
-                      width: 60,
-                      child: Text(
-                        'P' + element.id.toString(),
-                        style: decotationText,
-                        textAlign: TextAlign.center,
-                      ),
-                    )
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          width: 60,
+                          child: Text(
+                            'P' + element.id.toString(),
+                            style: decotationText,
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      ],
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Container(
+                          width: 60,
+                          child: Text(
+                            element.inst[0].toString() +
+                                ' - ' +
+                                element.inst[1].toString(),
+                            style: decotationText,
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          width: 60,
+                          child: Text(
+                            element.state,
+                            style: decotationText,
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      ],
+                    ),
                   ],
-                ),
-                Column(
-                  children: <Widget>[
-                    Container(
-                      width: 60,
-                      child: Text(
-                        element.inst[0].toString() +
-                            ' - ' +
-                            element.inst[1].toString(),
-                        style: decotationText,
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      width: 60,
-                      child: Text(
-                        element.state,
-                        style: decotationText,
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  ],
-                ),
+                )
               ],
             ),
           );
         }
-        return Row(
+        return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Column(
+            Container(
+              width: 325,
+              child: Divider(
+                thickness: 3.0,
+              ),
+            ),
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
