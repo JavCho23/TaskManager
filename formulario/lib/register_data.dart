@@ -55,11 +55,10 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
     for (int i = 0; i < 4; i++) {
       for (var j = 0; j < priorities; j++) {
         priorityOrderW[i].add(Container(
-          height: 60,
-          constraints: BoxConstraints(maxWidth: 60),
+          margin: EdgeInsets.all(5),
+          constraints: BoxConstraints(maxWidth: 20),
           child: TextFormField(
-            initialValue: "0",
-            decoration: InputDecoration(labelText: 'Prioridad'),
+            initialValue: "${(j + 1).toString()}",
             keyboardType: TextInputType.number,
             validator: (input) => input.length == 0 || int.parse(input) < 0
                 ? 'Ingrese un número correcto'
@@ -308,9 +307,12 @@ class _MyRegisterPageState extends State<MyRegisterPage> {
                                 Container(
                                   constraints: BoxConstraints(maxWidth: 100),
                                   child: TextFormField(
-                                    decoration: InputDecoration(hintText: '4'),
+                                    decoration: InputDecoration(
+                                        hintText: 'Instrucciones por UT'),
+                                    initialValue: '4',
                                     keyboardType: TextInputType.number,
-                                    validator: (input) => input.length == 0
+                                    validator: (input) => input.length == 0 ||
+                                            int.parse(input) < 0
                                         ? 'Ingrese un número correcto'
                                         : null,
                                     onSaved: (input) =>
